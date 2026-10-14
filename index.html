@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#b91c1c">
+<title>PNG Job Finder</title>
+<style>
+:root{--red:#b91c1c;--red-dark:#991b1b;--ink:#18212f;--muted:#64748b;--line:#e2e8f0;--bg:#f8fafc;--card:#fff;--green:#166534;--amber:#92400e}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.45}
+header{background:linear-gradient(135deg,var(--red),#7f1d1d);color:white;padding:24px 16px 28px}
+.wrap{max-width:1050px;margin:auto;padding:0 16px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-size:1.35rem;font-weight:800;letter-spacing:-.03em}.brand span{display:inline-block;background:#fff;color:var(--red);border-radius:8px;padding:2px 7px;margin-right:6px}
+.tag{font-size:.9rem;color:#fee2e2;margin-top:4px}
+.admin-toggle{border:1px solid #fecaca;background:#ffffff14;color:white;padding:9px 12px;border-radius:10px;font-weight:700;cursor:pointer}
+.hero{max-width:700px;padding-top:28px}.hero h1{font-size:clamp(1.8rem,5vw,3rem);line-height:1.05;letter-spacing:-.04em;margin:0 0 10px}.hero p{margin:0 0 18px;color:#fee2e2}
+.searchbar{display:flex;gap:8px;background:white;padding:7px;border-radius:14px;box-shadow:0 10px 30px #450a0a35}
+input,select,textarea{font:inherit;border:1px solid var(--line);border-radius:9px;padding:11px 12px;min-width:0;width:100%;background:white;color:var(--ink)}
+.searchbar input{border:0;outline:0;flex:1}.btn{border:0;border-radius:9px;padding:11px 15px;background:var(--red);color:white;font-weight:750;cursor:pointer}.btn:hover{background:var(--red-dark)}.btn.secondary{background:#f1f5f9;color:var(--ink);border:1px solid var(--line)}.btn.danger{background:#991b1b}.btn.small{padding:7px 10px;font-size:.86rem}
+main{padding:24px 0 50px}.notice{border:1px solid #fde68a;background:#fffbeb;color:#78350f;padding:11px 13px;border-radius:12px;font-size:.9rem;margin-bottom:18px}
+.filters{display:grid;grid-template-columns:1fr 200px 180px;gap:10px;margin-bottom:20px}
+.sectionhead{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:20px 0 12px}.sectionhead h2{margin:0;font-size:1.35rem}.count{font-size:.9rem;color:var(--muted)}
+.jobs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.job{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:17px;display:flex;flex-direction:column;gap:10px;box-shadow:0 2px 5px #0f172a05}.jobtop{display:flex;align-items:start;justify-content:space-between;gap:8px}.job h3{margin:0;font-size:1.12rem}.company{color:var(--muted);font-size:.94rem;margin-top:3px}.pill{font-size:.72rem;font-weight:800;border-radius:999px;padding:4px 8px;background:#f1f5f9;color:#475569;white-space:nowrap}.pill.demo{background:#fef3c7;color:#92400e}.pill.verified{background:#dcfce7;color:#166534}.pill.expired{background:#fee2e2;color:#991b1b}.meta{display:flex;gap:8px;flex-wrap:wrap;color:#475569;font-size:.86rem}.description{margin:0;color:#334155;font-size:.93rem;white-space:pre-wrap}.jobfoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:auto;padding-top:8px;border-top:1px solid #f1f5f9}.deadline{font-size:.82rem;color:var(--muted)}.empty{padding:32px 18px;text-align:center;border:1px dashed #cbd5e1;border-radius:14px;color:var(--muted);grid-column:1/-1}
+#adminPanel{display:none;margin-top:26px;background:white;border:1px solid var(--line);border-radius:16px;padding:18px}#adminPanel.show{display:block}.adminhead{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}.adminhead h2{margin:0}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.field label{display:block;font-size:.85rem;font-weight:750;margin-bottom:5px}.field.full{grid-column:1/-1}.formactions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.adminlist{margin-top:18px;border-top:1px solid var(--line);padding-top:12px}.adminrow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #f1f5f9}.adminrow p{margin:0}.adminrow small{color:var(--muted)}footer{border-top:1px solid var(--line);padding:20px 0;color:var(--muted);font-size:.84rem}
+@media(max-width:680px){.filters{grid-template-columns:1fr}.jobs{grid-template-columns:1fr}.searchbar{flex-direction:column;background:transparent;padding:0;box-shadow:none}.searchbar input{border:1px solid var(--line);border-radius:9px;padding:12px}.searchbar .btn{width:100%}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.jobfoot{align-items:flex-start;flex-direction:column}.adminrow{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <div><div class="brand"><span>PNG</span> Job Finder</div><div class="tag">Find jobs. Apply with confidence.</div></div>
+      <button class="admin-toggle" id="adminToggle" type="button">Admin tools</button>
+    </div>
+    <div class="hero">
+      <h1>Your next opportunity starts here.</h1>
+      <p>Explore job opportunities around Papua New Guinea, all in one place.</p>
+      <form class="searchbar" id="searchForm">
+        <input id="searchInput" aria-label="Search jobs" placeholder="Search job title, company or keyword">
+        <button class="btn" type="submit">Search jobs</button>
+      </form>
+    </div>
+  </div>
+</header>
+<main class="wrap">
+  <div class="notice"><strong>Prototype notice:</strong> Sample listings are demonstrations, not confirmed vacancies. Before publishing a real listing, check the original employer source and closing date. Applying should always be free.</div>
+  <div class="filters">
+    <select id="categoryFilter" aria-label="Filter by category">
+      <option value="">All categories</option><option>Driver</option><option>Warehouse</option><option>Administration</option><option>Security</option><option>Entry-level</option><option>Other</option>
+    </select>
+    <select id="locationFilter" aria-label="Filter by location">
+      <option value="">All locations</option><option>Port Moresby</option><option>Lae</option><option>Mount Hagen</option><option>Madang</option><option>Other</option>
+    </select>
+    <select id="statusFilter" aria-label="Filter by listing status">
+      <option value="active">Current listings</option><option value="all">All listings</option><option value="expired">Expired listings</option>
+    </select>
+  </div>
+  <div class="sectionhead"><h2>Latest jobs</h2><div class="count" id="jobCount" aria-live="polite"></div></div>
+  <section class="jobs" id="jobsList" aria-label="Job listings"></section>
+
+  <section id="adminPanel" aria-label="Admin dashboard">
+    <div class="adminhead"><h2>Admin dashboard</h2><span class="pill">This device only</span></div>
+    <p style="color:var(--muted);margin:7px 0 0">Add and manage listings for this prototype. Data is saved in this browser only; there is no login or shared online database yet.</p>
+    <form id="jobForm">
+      <input type="hidden" id="jobId">
+      <div class="formgrid">
+        <div class="field"><label for="title">Job title *</label><input id="title" required maxlength="90" placeholder="e.g. Delivery Driver"></div>
+        <div class="field"><label for="company">Employer *</label><input id="company" required maxlength="100" placeholder="Company name"></div>
+        <div class="field"><label for="category">Category *</label><select id="category" required><option value="">Choose category</option><option>Driver</option><option>Warehouse</option><option>Administration</option><option>Security</option><option>Entry-level</option><option>Other</option></select></div>
+        <div class="field"><label for="location">Location *</label><select id="location" required><option value="">Choose location</option><option>Port Moresby</option><option>Lae</option><option>Mount Hagen</option><option>Madang</option><option>Other</option></select></div>
+        <div class="field"><label for="deadline">Closing date *</label><input id="deadline" type="date" required></div>
+        <div class="field"><label for="source">Original application URL *</label><input id="source" type="url" required placeholder="https://company.com/careers"></div>
+        <div class="field full"><label for="description">Short description *</label><textarea id="description" required rows="3" maxlength="800" placeholder="Requirements, duties, and how to apply"></textarea></div>
+        <div class="field"><label for="sourceType">Source status</label><select id="sourceType"><option value="unverified">Not yet verified</option><option value="verified">Employer/source checked</option></select></div>
+      </div>
+      <div class="formactions"><button class="btn" type="submit" id="saveBtn">Add job listing</button><button class="btn secondary" type="button" id="cancelEdit" style="display:none">Cancel edit</button><button class="btn secondary" type="button" id="exportBtn">Export listings (JSON)</button><label class="btn secondary" for="importFile" style="display:inline-flex;align-items:center;cursor:pointer">Import JSON</label><input id="importFile" type="file" accept="application/json,.json" style="display:none"></div>
+    </form>
+    <div class="adminlist"><h3>Manage listings</h3><div id="adminList"></div></div>
+  </section>
+</main>
+<footer><div class="wrap">PNG Job Finder MVP · Prototype build · Always apply through the original employer source. Do not pay anyone to apply for a job.</div></footer>
+<script>
+const demoJobs = [
+ {id:"demo-1",title:"Delivery Driver",company:"Example Employer",category:"Driver",location:"Port Moresby",deadline:"2026-10-30",source:"https://example.com/careers",description:"Demonstration listing only. Replace this sample with a real vacancy after checking the employer's official source and closing date.",sourceType:"unverified",demo:true},
+ {id:"demo-2",title:"Warehouse Assistant",company:"Example Employer",category:"Warehouse",location:"Lae",deadline:"2026-11-05",source:"https://example.com/careers",description:"Demonstration listing only. Add the genuine job requirements and original application link before publishing.",sourceType:"unverified",demo:true},
+ {id:"demo-3",title:"Administration Support Officer",company:"Example Employer",category:"Administration",location:"Port Moresby",deadline:"2026-10-28",source:"https://example.com/careers",description:"Demonstration listing only. This is not a confirmed vacancy.",sourceType:"unverified",demo:true}
+];
+const STORE="png-job-finder-v1";
+let jobs = loadJobs();
+function loadJobs(){try{const saved=localStorage.getItem(STORE);return saved?JSON.parse(saved):demoJobs.slice()}catch(e){return demoJobs.slice()}}
+function persist(){localStorage.setItem(STORE,JSON.stringify(jobs))}
+function today(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function isExpired(j){return !!j.deadline && j.deadline < today()}
+function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function prettyDate(s){if(!s)return "No closing date";const d=new Date(s+"T00:00:00");return Number.isNaN(d.getTime())?s:d.toLocaleDateString("en-PG",{day:"numeric",month:"short",year:"numeric"})}
+function render(){
+ const q=document.getElementById("searchInput").value.trim().toLowerCase(),cat=document.getElementById("categoryFilter").value,loc=document.getElementById("locationFilter").value,status=document.getElementById("statusFilter").value;
+ const filtered=jobs.filter(j=>{
+  const hay=[j.title,j.company,j.category,j.location,j.description].join(" ").toLowerCase();
+  if(q&&!hay.includes(q))return false;if(cat&&j.category!==cat)return false;if(loc&&j.location!==loc)return false;
+  if(status==="active"&&isExpired(j))return false;if(status==="expired"&&!isExpired(j))return false;return true;
+ }).sort((a,b)=>String(a.deadline).localeCompare(String(b.deadline)));
+ document.getElementById("jobCount").textContent=`${filtered.length} listing${filtered.length===1?"":"s"}`;
+ const root=document.getElementById("jobsList");
+ if(!filtered.length){root.innerHTML='<div class="empty">No matching jobs found. Try changing your search or filters.</div>'}
+ else root.innerHTML=filtered.map(j=>`<article class="job">
+  <div class="jobtop"><div><h3>${esc(j.title)}</h3><div class="company">${esc(j.company)}</div></div><span class="pill ${isExpired(j)?"expired":j.demo?"demo":j.sourceType==="verified"?"verified":""}">${isExpired(j)?"Expired":j.demo?"Sample":j.sourceType==="verified"?"Source checked":"Unverified"}</span></div>
+  <div class="meta"><span>📍 ${esc(j.location)}</span><span>• ${esc(j.category)}</span></div>
+  <p class="description">${esc(j.description)}</p>
+  <div class="jobfoot"><span class="deadline">Closing: ${prettyDate(j.deadline)}</span><a class="btn small" href="${esc(j.source)}" target="_blank" rel="noopener noreferrer" ${isExpired(j)?"aria-disabled=true":""}>${isExpired(j)?"View source":"Apply / view source ↗"}</a></div>
+ </article>`).join("");
+ renderAdmin();
+}
+function renderAdmin(){
+ const root=document.getElementById("adminList");
+ if(!jobs.length){root.innerHTML="<p>No listings yet.</p>";return}
+ root.innerHTML=jobs.map(j=>`<div class="adminrow"><div><p><strong>${esc(j.title)}</strong> — ${esc(j.company)}</p><small>${esc(j.location)} · closes ${prettyDate(j.deadline)} ${j.demo?"· sample listing":""}</small></div><div style="display:flex;gap:7px;flex-wrap:wrap"><button class="btn secondary small" data-edit="${esc(j.id)}">Edit</button><button class="btn danger small" data-delete="${esc(j.id)}">Delete</button></div></div>`).join("");
+}
+document.getElementById("searchForm").addEventListener("submit",e=>{e.preventDefault();render()});
+["categoryFilter","locationFilter","statusFilter"].forEach(id=>document.getElementById(id).addEventListener("change",render));
+document.getElementById("searchInput").addEventListener("input",render);
+document.getElementById("adminToggle").addEventListener("click",()=>{const p=document.getElementById("adminPanel");p.classList.toggle("show");if(p.classList.contains("show"))p.scrollIntoView({behavior:"smooth",block:"start"})});
+document.getElementById("jobForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const id=document.getElementById("jobId").value||"job-"+Date.now();
+ const old=jobs.find(j=>j.id===id);
+ const j={id,title:document.getElementById("title").value.trim(),company:document.getElementById("company").value.trim(),category:document.getElementById("category").value,location:document.getElementById("location").value,deadline:document.getElementById("deadline").value,source:document.getElementById("source").value.trim(),description:document.getElementById("description").value.trim(),sourceType:document.getElementById("sourceType").value,demo:false};
+ if(old)jobs=jobs.map(x=>x.id===id?j:x);else jobs.unshift(j);
+ persist();e.target.reset();resetEdit();render();alert(old?"Listing updated.":"Listing added.");
+});
+function resetEdit(){document.getElementById("jobId").value="";document.getElementById("saveBtn").textContent="Add job listing";document.getElementById("cancelEdit").style.display="none"}
+document.getElementById("cancelEdit").addEventListener("click",()=>{document.getElementById("jobForm").reset();resetEdit()});
+document.getElementById("adminList").addEventListener("click",e=>{
+ const edit=e.target.closest("[data-edit]")?.dataset.edit,del=e.target.closest("[data-delete]")?.dataset.delete;
+ if(edit){const j=jobs.find(x=>x.id===edit);if(!j)return;for(const k of ["id","title","company","category","location","deadline","source","description","sourceType"])document.getElementById(k==="id"?"jobId":k).value=j[k]??"";document.getElementById("saveBtn").textContent="Save changes";document.getElementById("cancelEdit").style.display="inline-block";document.getElementById("jobForm").scrollIntoView({behavior:"smooth",block:"start"})}
+ if(del&&confirm("Delete this listing?")){jobs=jobs.filter(x=>x.id!==del);persist();render()}
+});
+document.getElementById("exportBtn").addEventListener("click",()=>{const blob=new Blob([JSON.stringify(jobs,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="png-job-finder-listings.json";a.click();URL.revokeObjectURL(a.href)});
+document.getElementById("importFile").addEventListener("change",async e=>{const file=e.target.files[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!Array.isArray(data)||data.some(j=>!j.id||!j.title||!j.company))throw new Error("Invalid listing file");if(confirm("Import and replace all current listings?")){jobs=data;persist();render();alert("Listings imported.")}}catch(err){alert("Could not import file. Please choose a valid JSON export.")}e.target.value=""});
+render();
+</script>
+</body>
+</html>
