@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PNG Job Finder - Real Jobs in PNG</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui}
+body{background:#f5f7fb;color:#222;padding:16px}
+header{background:#0b2a5a;color:#fff;padding:18px;border-radius:12px;margin-bottom:12px}
+header h1{font-size:22px} header p{opacity:.9;margin-top:6px;font-size:14px}
+.employer-banner{background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;padding:14px;border-radius:10px;margin-bottom:12px;text-align:center;font-weight:bold;border:2px dashed #c00}
+.employer-banner a{background:#c00;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;display:inline-block;margin-top:8px}
+.notice{background:#fff3cd;border:1px solid #ffe69c;padding:10px;border-radius:8px;margin-bottom:12px;font-size:13px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filters input,.filters select{padding:10px;border:1px solid #ccc;border-radius:8px;flex:1;min-width:120px}
+.job{background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);position:relative}
+.job.featured{border:2px solid #FFD700;background:#FFFEF5}
+.featured-badge{background:#FFD700;color:#000;font-size:11px;padding:3px 8px;border-radius:4px;font-weight:bold;position:absolute;top:10px;right:10px}
+.jobtop h3{font-size:16px;margin-right:70px}
+.meta{color:#555;font-size:13px;margin:4px 0}
+.description{font-size:14px;margin:8px 0;color:#333}
+.jobfoot{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.deadline{font-size:12px;color:#b00}
+.btn{background:#eee;color:#222;padding:6px 10px;border-radius:6px;text-decoration:none;font-size:13px;display:inline-block}
+.btn.apply{background:#c00;color:#fff}
+.btn.wa{background:#25D366;color:#fff;font-weight:bold}
+#jobCount{font-size:13px;margin-bottom:8px;color:#555}
+.ads-slot{background:#fff;border:1px dashed #ccc;padding:20px;text-align:center;border-radius:8px;margin:12px 0;color:#888;font-size:12px}
+</style>
+</head>
+<body>
+<header><h1>🇵🇬 PNG Job Finder</h1><p>Real jobs from Port Moresby, Lae & PNG - Updated daily</p></header>
+
+<div class="employer-banner">
+🏢 EMPLOYERS: Want 1000s to see your job?<br>
+Feature your job at TOP for K100/week - Stays on top 7 days!<br>
+<a href="https://wa.me/67577411640?text=Hi%20PNG%20Job%20Finder!%20I%20want%20to%20feature%20my%20job%20for%20K100" target="_blank">📲 WhatsApp 77411640 to Advertise</a><br>
+<small style="font-weight:normal">Pay via BSP Mobile Banking / BSP Transfer - K100 = Kina cash - Quick approval</small>
+</div>
+
+<div class="notice">⚠️ <b>Prototype:</b> Always verify jobs on official company page. We only link to original sources.</div>
+
+<div class="filters">
+<input id="searchInput" placeholder="Search title, company...">
+<select id="categoryFilter"><option value="">All Categories</option><option>Retail</option><option>Telecom</option><option>Logistics</option></select>
+<select id="locationFilter"><option value="">All Locations</option><option>Port Moresby</option><option>Lae</option></select>
+</div>
+<div id="jobCount"></div>
+<div id="jobsList"></div>
+
+<div class="ads-slot">AD SPACE - Your Google AdSense will appear here soon (K0.20 per click)</div>
+
+<script>
+const demoJobs = [
+{id:"featured-1",title:"Retail Sales Assistant",company:"CPL - Stop & Shop",location:"Port Moresby",category:"Retail",deadline:"2026-10-30",description:"⭐ FEATURED: Customer service and sales at Stop & Shop Waigani & Vision City. Grade 12 required. Apply via CPL Facebook Page or in-store. THIS IS AN EXAMPLE OF FEATURED JOB - Yours can be here!",applyLink:"https://www.facebook.com/CPLGroupPNG",source:"https://www.facebook.com/CPLGroupPNG",featured:true},
+{id:"real-2",title:"Customer Service Officer",company:"Digicel PNG",location:"Port Moresby",category:"Telecom",deadline:"2026-11-05",description:"Help customers with Digicel services in POM. Good English & Tok Pisin. Training provided. Apply via Digicel Careers.",applyLink:"https://www.digicelgroup.com/pg/en/careers.html",source:"https://www.digicelgroup.com/pg/en/careers.html",featured:false},
+{id:"real-3",title:"Driver Class 6 - Lae",company:"Brian Bell",location:"Lae",category:"Logistics",deadline:"2026-10-28",description:"Experienced driver for Lae warehouse. Valid Class 6 licence, 3+ years. Apply via Brian Bell careers.",applyLink:"https://www.brianbell.com.pg/careers",source:"https://www.brianbell.com.pg/careers",featured:false}
+];
+function getJobs(){try{const s=localStorage.getItem("pngjobs");return s?JSON.parse(s):demoJobs.slice()}catch(e){return demoJobs.slice()}}
+let jobs=getJobs();
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function prettyDate(d){try{const x=new Date(d+"T00:00:00");return isNaN(x)?d:x.toLocaleDateString("en-PG",{day:"numeric",month:"short",year:"numeric"})}catch(e){return d}}
+function render(){
+ const q=document.getElementById("searchInput").value.toLowerCase();
+ const cat=document.getElementById("categoryFilter").value;
+ const loc=document.getElementById("locationFilter").value;
+ let filtered=jobs.filter(j=>{
+   const hay=[j.title,j.company,j.category,j.location,j.description].join(" ").toLowerCase();
+   if(q&&!hay.includes(q))return false;
+   if(cat&&j.category!==cat)return false;
+   if(loc&&j.location!==loc)return false;
+   return true;
+ }).sort((a,b)=>{if(a.featured&&!b.featured)return -1;if(!a.featured&&b.featured)return 1;return String(a.deadline).localeCompare(String(b.deadline))});
+ document.getElementById("jobCount").textContent=filtered.length+" listing"+(filtered.length!==1?"s":"");
+ const root=document.getElementById("jobsList");
+ if(!filtered.length){root.innerHTML='<div class="job">No jobs found</div>';return}
+ root.innerHTML=filtered.map(j=>`
+<article class="job ${j.featured?'featured':''}">
+${j.featured?'<span class="featured-badge">⭐ FEATURED</span>':''}
+<div class="jobtop"><div><h3>${esc(j.title)}</h3><div class="meta"><span>📍 ${esc(j.location)}</span> - <strong>${esc(j.company)}</strong></div></div></div>
+<p class="description">${esc(j.description)}</p>
+<div class="jobfoot">
+<span class="deadline">📅 closes ${prettyDate(j.deadline)}</span>
+<a class="btn" href="${esc(j.source)}" target="_blank">Source</a>
+<a class="btn apply" href="${esc(j.applyLink)}" target="_blank">Apply</a>
+<a class="btn wa" href="https://wa.me/?text=${encodeURIComponent('PNG JOB: '+j.title+' at '+j.company+' ('+j.location+') - '+location.href)}" target="_blank">WhatsApp</a>
+</div>
+</article>`).join("");
+}
+document.getElementById("searchInput").addEventListener("input",render);
+document.getElementById("categoryFilter").addEventListener("change",render);
+document.getElementById("locationFilter").addEventListener("change",render);
+render();
+</script>
+</body>
+</html>
