@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PNG Job Finder - Real Jobs in PNG</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui}
+body{background:#f5f7fb;color:#222;padding:16px}
+header{background:#0b2a5a;color:#fff;padding:18px;border-radius:12px;margin-bottom:12px}
+header h1{font-size:22px} header p{opacity:.9;margin-top:6px;font-size:14px}
+.employer-banner{background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;padding:14px;border-radius:10px;margin-bottom:12px;text-align:center;font-weight:bold;border:2px dashed #c00}
+.employer-banner a{background:#c00;color:#fff;padding:8px 14px;border-radius:8px;text-decoration:none;display:inline-block;margin-top:8px}
+.notice{background:#fff3cd;border:1px solid #ffe69c;padding:10px;border-radius:8px;margin-bottom:12px;font-size:13px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filters input,.filters select{padding:10px;border:1px solid #ccc;border-radius:8px;flex:1;min-width:120px}
+.job{background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);position:relative}
+.job.featured{border:2px solid #FFD700;background:#FFFEF5}
+.featured-badge{background:#FFD700;color:#000;font-size:11px;padding:3px 8px;border-radius:4px;font-weight:bold;position:absolute;top:10px;right:10px}
+.jobtop h3{font-size:16px;margin-right:70px}
+.meta{color:#555;font-size:13px;margin:4px 0}
+.description{font-size:14px;margin:8px 0;color:#333}
+.jobfoot{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.deadline{font-size:12px;color:#b00}
+.btn{background:#eee;color:#222;padding:6px 10px;border-radius:6px;text-decoration:none;font-size:13px;display:inline-block}
+.btn.apply{background:#c00;color:#fff}
+.btn.wa{background:#25D366;color:#fff;font-weight:bold}
+#jobCount{font-size:13px;margin-bottom:8px;color:#555}
+.ads-slot{background:#fff;border:1px dashed #ccc;padding:20px;text-align:center;border-radius:8px;margin:12px 0;color:#888;font-size:12px}
+</style>
+</head>
+<body>
+<header><h1>🇵🇬 PNG Job Finder</h1><p>Real jobs from Port Moresby, Lae & PNG - Updated daily</p></header>
+
+<div class="employer-banner">
+🏢 EMPLOYERS: Want 1000s to see your job?<br>
+Feature your job at TOP for K100/week - Stays on top 7 days!<br>
+<a href="https://wa.me/67577411640?text=Hi%20PNG%20Job%20Finder!%20I%20want%20to%20feature%20my%20job%20for%20K100" target="_blank">📲 WhatsApp 77411640 to Advertise</a><br>
+<small style="font-weight:normal">Pay via BSP Mobile Banking / BSP Transfer - K100 = Kina cash - Quick approval</small>
+</div>
+
+<div class="notice">⚠️ <b>Prototype:</b> Always verify jobs on official company page. We only link to original sources.</div>
+
+<div class="filters">
+<input id="searchInput" placeholder="Search title, company...">
+<select id="categoryFilter"><option value="">All Categories</option><option>Retail</option><option>Telecom</option><option>Logistics</option></select>
+<select id="locationFilter"><option value="">All Locations</option><option>Port Moresby</option><option>Lae</option></select>
+</div>
+<div id="jobCount"></div>
+<div id="jobsList"></div>
+
+<div class="ads-slot">AD SPACE - Your Google AdSense will appear here soon (K0.20 per click)</div>
+
+<script>
+const demoJobs = [
+{id:"featured-1",title:"Retail Sales Assistant",company:"CPL - Stop & Shop",location:"Port Moresby",category:"Retail",deadline:"2026-10-30",description:"⭐ FEATURED EXAMPLE: Customer service and sales at Stop & Shop Waigani & Vision City. Grade 12 required. Apply via CPL Facebook Page or in-store. YOUR JOB CAN BE HERE FOR K100!",applyLink:"https://www.facebook.com/CPLGroupPNG",source:"https://www.facebook.com/CPLGroupPNG",featured:true},
+{id:"2",title:"Customer Service Officer",company:"Digicel PNG",location:"Port Moresby",category:"Telecom",deadline:"2026-11-05",description:"Help customers with Digicel services in POM. Good English & Tok Pisin. Training provided. Apply via Digicel Careers website.",applyLink:"https://www.digicelgroup.com/pg/en/careers.html",source:"https://www.digicelgroup.com/pg/en/careers.html",featured:false},
+{id:"3",title:"Driver Class 6 - Lae",company:"Brian Bell",location:"Lae",category:"Logistics",deadline:"2026-10-28",description:"Experienced driver for Lae warehouse. Valid Class 6 licence, 3+ years. Apply via Brian Bell careers.",applyLink:"https://www.brianbell.com.pg/careers",source:"https://www.brianbell.com.pg/careers",featured:false},
+{id:"4",title:"Cashier - Boroko",company:"RH Hypermarket",location:"Port Moresby",category:"Retail",deadline:"2026-11-02",description:"Cashier for RH Gordons. Grade 10/12, honest and fast with money. Experience preferred. Apply in-store with CV.",applyLink:"https://www.facebook.com/RHPNG",source:"https://www.facebook.com/RHPNG",featured:false},
+{id:"5",title:"Security Guard",company:"Guard Dog Security",location:"Port Moresby",category:"Security",deadline:"2026-10-27",description:"Security guards needed for POM sites. Must have security permit, physically fit. Night shift. Apply at Guard Dog office 4 Mile.",applyLink:"https://www.facebook.com/GuardDogSecurityPNG",source:"https://www.facebook.com/GuardDogSecurityPNG",featured:false},
+{id:"6",title:"Sales Rep - Lae",company:"Trukai Industries",location:"Lae",category:"Sales",deadline:"2026-11-08",description:"Sales representative for Trukai rice. Must have licence, know Lae markets. Grade 12+. Apply via Trukai website.",applyLink:"https://www.trukai.com.pg/careers",source:"https://www.trukai.com.pg/careers",featured:false},
+{id:"7",title:"Cleaner - Vision City",company:"CPL Group",location:"Port Moresby",category:"Cleaning",deadline:"2026-10-26",description:"Cleaners needed for Vision City mall. Morning shift 6am-2pm. Hardworking. Apply at CPL Head Office Waigani.",applyLink:"https://www.facebook.com/CPLGroupPNG",source:"https://www.facebook.com/CPLGroupPNG",featured:false},
+{id:"8",title:"Kitchen Staff",company:"Paradise Foods",location:"Lae",category:"Hospitality",deadline:"2026-11-01",description:"Kitchen hands for Paradise Foods factory Lae. Food prep, cleaning. No experience needed but must be healthy. Apply at factory.",applyLink:"https://www.paradise-foods.com.pg",source:"https://www.paradise-foods.com.pg",featured:false},
+{id:"9",title:"Electrician",company:"PNG Power Ltd",location:"Port Moresby",category:"Trades",deadline:"2026-11-10",description:"Licensed electrician for PPL. Certificate in Electrical, 2 years experience. Apply via PNG Power careers portal.",applyLink:"https://www.pngpower.com.pg",source:"https://www.pngpower.com.pg",featured:false},
+{id:"10",title:"Waiter / Waitress",company:"Grand Papua Hotel",location:"Port Moresby",category:"Hospitality",deadline:"2026-10-29",description:"Wait staff for Grand Papua Hotel. Good English, customer service. Experience in hotel preferred. Apply at hotel HR.",applyLink:"https://www.facebook.com/GrandPapuaHotel",source:"https://www.facebook.com/GrandPapuaHotel",featured:false},
+{id:"11",title:"Warehouse Assistant",company:"Lae Biscuit Company",location:"Lae",category:"Logistics",deadline:"2026-11-03",description:"Warehouse helpers needed in Lae. Loading, packing biscuits. Must be strong, Grade 10. Apply at Lae Biscuit office.",applyLink:"https://www.facebook.com/LaeBiscuit",source:"https://www.facebook.com/LaeBiscuit",featured:false},
+{id:"12",title:"Admin Assistant",company:"Water PNG",location:"Port Moresby",category:"Admin",deadline:"2026-11-07",description:"Admin assistant for Water PNG HQ. Computer skills, MS Word/Excel. Grade 12 + Diploma. Apply via Water PNG website.",applyLink:"https://www.waterpng.com.pg",source:"https://www.waterpng.com.pg",featured:false},
+{id:"13",title:"Plumber",company:"City Pharmacy Group",location:"Port Moresby",category:"Trades",deadline:"2026-11-04",description:"Maintenance plumber for CPL properties. Trade certificate, 3 years exp. Apply via CPL Group.",applyLink:"https://www.facebook.com/CPLGroupPNG",source:"https://www.facebook.com/CPLGroupPNG",featured:false},
+{id:"14",title:"Receptionist",company:"SP Brewery",location:"Lae",category:"Admin",deadline:"2026-10-31",description:"Receptionist for SP Brewery Lae. Good phone manners, computer literate. Female preferred. Apply via SP Brewery careers.",applyLink:"https://www.southpacificbrewery.com",source:"https://www.southpacificbrewery.com",featured:false},
+{id:"15",title:"Motorbike Delivery Rider",company:"DHL Express PNG",location:"Port Moresby",category:"Logistics",deadline:"2026-11-06",description:"Delivery riders with motorbike licence. Know POM roads. Full time. Fuel allowance provided. Apply via DHL PNG.",applyLink:"https://www.dhl.com/pg-en",source:"https://www.dhl.com/pg-en",featured:false}
+];
+function getJobs(){try{const s=localStorage.getItem("pngjobs");return s?JSON.parse(s):demoJobs.slice()}catch(e){return demoJobs.slice()}}
+let jobs=getJobs();
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function prettyDate(d){try{const x=new Date(d+"T00:00:00");return isNaN(x)?d:x.toLocaleDateString("en-PG",{day:"numeric",month:"short",year:"numeric"})}catch(e){return d}}
+function render(){
+ const q=document.getElementById("searchInput").value.toLowerCase();
+ const cat=document.getElementById("categoryFilter").value;
+ const loc=document.getElementById("locationFilter").value;
+ let filtered=jobs.filter(j=>{
+   const hay=[j.title,j.company,j.category,j.location,j.description].join(" ").toLowerCase();
+   if(q&&!hay.includes(q))return false;
+   if(cat&&j.category!==cat)return false;
+   if(loc&&j.location!==loc)return false;
+   return true;
+ }).sort((a,b)=>{if(a.featured&&!b.featured)return -1;if(!a.featured&&b.featured)return 1;return String(a.deadline).localeCompare(String(b.deadline))});
+ document.getElementById("jobCount").textContent=filtered.length+" listing"+(filtered.length!==1?"s":"");
+ const root=document.getElementById("jobsList");
+ if(!filtered.length){root.innerHTML='<div class="job">No jobs found</div>';return}
+ root.innerHTML=filtered.map(j=>`
+<article class="job ${j.featured?'featured':''}">
+${j.featured?'<span class="featured-badge">⭐ FEATURED</span>':''}
+<div class="jobtop"><div><h3>${esc(j.title)}</h3><div class="meta"><span>📍 ${esc(j.location)}</span> - <strong>${esc(j.company)}</strong></div></div></div>
+<p class="description">${esc(j.description)}</p>
+<div class="jobfoot">
+<span class="deadline">📅 closes ${prettyDate(j.deadline)}</span>
+<a class="btn" href="${esc(j.source)}" target="_blank">Source</a>
+<a class="btn apply" href="${esc(j.applyLink)}" target="_blank">Apply</a>
+<a class="btn wa" href="https://wa.me/?text=${encodeURIComponent('PNG JOB: '+j.title+' at '+j.company+' ('+j.location+') - '+location.href)}" target="_blank">WhatsApp</a>
+</div>
+</article>`).join("");
+}
+document.getElementById("searchInput").addEventListener("input",render);
+document.getElementById("categoryFilter").addEventListener("change",render);
+document.getElementById("locationFilter").addEventListener("change",render);
+render();
+</script>
+</body>
+</html>
